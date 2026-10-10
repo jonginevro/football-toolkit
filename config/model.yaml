@@ -1,0 +1,50 @@
+# =============================================================================
+# Breakout model configuration.
+#
+# The score is a probability: the chance a player breaks out over the REST of
+# the season, given what is known going into the current week (week 1 =
+# preseason). It comes from a logistic regression trained walk-forward on past
+# seasons, so these settings define WHAT a breakout is and how the model learns
+# — the weights themselves are learned, and you can re-weight the factor groups
+# live on the site to see how each past season's board would have changed.
+# =============================================================================
+
+breakout:
+  # Rest-of-season PPR per game that makes a player startable...
+  startable_ppg: {QB: 17.0, RB: 12.0, WR: 12.0, TE: 9.0}
+  # ...and how far above his established level he has to get to count.
+  # "Established level" = this season's per-game, blended with last season's
+  # (last season weighted as 4 games).
+  min_jump_ppg: {QB: 3.0, RB: 3.0, WR: 3.0, TE: 2.5}
+  # Players already producing at this multiple of the startable bar are
+  # established, not breakout candidates: they're left off the board entirely.
+  established_mult: 1.25
+
+# The value "sweet spot": the board ranks by
+#   score = chance * (floor + (1 - floor) * sweet_spot(market rank))
+# where sweet_spot peaks at `peak_rank` in FantasyPros overall ECR and falls off
+# for stars (already priced in) and for players nobody ranks. Backtested on the
+# 2020-25 preseason boards with that August's rankings. All three are sliders
+# on the site; these are the defaults.
+# Defaults were picked by grid search on those same six seasons (so slightly
+# optimistic): they kept ~6 breakouts per preseason top 20, vs 5.7 ranking by
+# chance alone, while the typical pick's ECR moved from ~95 to ~137.
+value:
+  floor: 0.2        # 1.0 = ignore price entirely
+  peak_rank: 150    # ~ round 12-13 of a 12-team draft
+  sigma: 0.25       # width in log10(rank): ~ECR 85-265 at half strength
+
+# L2 regularization strength (higher = flatter, more conservative weights).
+l2: 1.0
+
+# Weeks each past season is snapshotted at for training and the track record.
+# The current week is added automatically so "today" always has a comparison.
+snapshot_weeks: [1, 4, 7, 10]
+
+# Each learned feature belongs to a factor group. The site shows each player's
+# score broken down by group and lets you dial a group up or down.
+groups:
+  talent: [log_pick, eff_rel, prior_ppg_rel]
+  role: [own_share, open_opp, starter, backup, new_team, recent_delta]
+  profile: [rookie, year2, year3, age_rel, age_rel_sq]
+  ceiling: [baseline_rel, baseline_rel_sq]

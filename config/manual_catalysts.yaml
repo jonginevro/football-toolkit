@@ -1,31 +1,21 @@
 # =============================================================================
-# Manual catalysts — the human-judgment signals that raw stats can't see:
-# new coaching staffs, scheme changes, an injury/holdout to the guy ahead,
-# reported offseason buzz, a training-camp move up the depth chart.
+# Manual catalysts: the human-judgment signals stats can't see. A new
+# coaching staff, a scheme change, an aging starter ahead, camp buzz.
 #
-# These feed the "catalyst" factor. Keep them honest: only add a signal that
-# points to a CONCRETE reason volume could open up. This is exactly the lever
-# for a thesis like Kaleb Johnson — new coaches + aging RBs ahead of him.
+# These nudge the LIVE board only (they have no history, so they're never part
+# of the backtest). Each value is a 0..1 confidence; a player's team + player
+# notes are summed, capped at 1, and a maxed-out note adds +1.0 log-odds
+# (roughly 2.7x the odds). They show up as a red "notes" bar on the site.
 #
-# Values are 0..1 "confidence" nudges. They are additive within the catalyst
-# factor (capped), then the whole factor is re-normalized.
-#
-#   teams:   apply to every skill player on the team
-#   players: apply to a single player (matched by name, case-insensitive)
+#   teams:   apply to every skill player on the team (by team abbreviation)
+#   players: apply to one player (matched by full name, case-insensitive)
 # =============================================================================
 
-teams:
-  # Example — a team that hired a new offensive staff this offseason:
+teams: {}
   # PIT:
-  #   new_coaching_staff: 0.8
-  #   scheme_change: 0.6
-  {}
+  #   new_coaching_staff: 0.5
 
-players:
-  # Example encoding of your Kaleb Johnson thesis. Uncomment / edit names to
-  # match reality (the model will confirm his team + depth from the data).
+players: {}
   # "Kaleb Johnson":
-  #   injury_or_age_ahead: 0.7     # older RBs ahead of him on the chart
-  #   offseason_buzz: 0.4
-  #   camp_riser: 0.5
-  {}
+  #   injury_or_age_ahead: 0.6
+  #   camp_riser: 0.3

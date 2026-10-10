@@ -1,0 +1,45 @@
+name: Refresh board data
+
+# Rebuilds docs/data from the latest nflverse + Sleeper data and commits it.
+# The portfolio site (jonginevro.com) copies docs/ on its own deploy schedule.
+on:
+  schedule:
+    - cron: "0 9 * 9-12,1 *"   # daily during the season (Sep–Jan)
+    - cron: "0 9 * 2-8 1"      # weekly in the offseason
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      # Completed seasons never change: keep their downloads + snapshots between runs
+      - uses: actions/cache@v4
+        with:
+          path: data/cache
+          key: nflverse-${{ github.run_id }}
+          restore-keys: nflverse-
+
+      - run: pip install -r requirements.txt
+      - run: python -m src.export
+
+      - name: Commit if changed
+        run: |
+          git add docs/data
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+            git commit -m "data: refresh board"
+            git push
+          fi

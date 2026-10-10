@@ -1,6 +1,7 @@
-"""Central configuration: seasons, data URLs, and loaders for the tunable YAML files."""
+"""Central configuration: seasons, data URLs, paths, and the tunable YAML files."""
 from __future__ import annotations
 
+import datetime as dt
 import functools
 from pathlib import Path
 
@@ -11,20 +12,28 @@ ROOT = Path(__file__).resolve().parent.parent
 CONFIG_DIR = ROOT / "config"
 CACHE_DIR = ROOT / "data" / "cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
+SITE_DIR = ROOT / "docs"
+SITE_DATA_DIR = SITE_DIR / "data"
 
 # --- Seasons -----------------------------------------------------------------
-# The season we're projecting breakouts *for*.
-UPCOMING_SEASON = 2026
-# The most recent completed season we have full stats for (the "prior" baseline).
-PRIOR_SEASON = 2025
-# How many prior seasons of weekly stats to pull (for multi-year context/efficiency).
-HISTORY_SEASONS = [2023, 2024, 2025]
+# The season the live board is for. Rolls over in August so the board flips to
+# "preseason" for the new year once rosters for it exist.
+_today = dt.date.today()
+CURRENT_SEASON = _today.year if _today.month >= 8 else _today.year - 1
+
+# Earliest season with weekly stats we pull (the prior-year baseline for the
+# first training season).
+FIRST_STATS_SEASON = 2013
+# Seasons used as training rows: each needs the season before it for a baseline.
+FIRST_TRAIN_SEASON = 2014
+# Walk-forward folds start once there are at least this many training seasons.
+MIN_TRAIN_SEASONS = 3
+# First season whose preseason board is published on the History page.
+FIRST_HISTORY_SEASON = 2020
 
 SKILL_POSITIONS = ["QB", "RB", "WR", "TE"]
 
 # --- nflverse release asset URLs --------------------------------------------
-# Verified live filenames (nflverse renamed the weekly-stats asset to
-# `stats_player/stats_player_week_<year>.parquet`).
 NFLVERSE = "https://github.com/nflverse/nflverse-data/releases/download"
 
 
@@ -32,30 +41,29 @@ def stats_url(season: int) -> str:
     return f"{NFLVERSE}/stats_player/stats_player_week_{season}.parquet"
 
 
-def snaps_url(season: int) -> str:
-    return f"{NFLVERSE}/snap_counts/snap_counts_{season}.parquet"
-
-
-def roster_url(season: int) -> str:
-    return f"{NFLVERSE}/rosters/roster_{season}.parquet"
+def weekly_roster_url(season: int) -> str:
+    return f"{NFLVERSE}/weekly_rosters/roster_weekly_{season}.parquet"
 
 
 def depth_chart_url(season: int) -> str:
     return f"{NFLVERSE}/depth_charts/depth_charts_{season}.parquet"
 
 
-DRAFT_PICKS_URL = f"{NFLVERSE}/draft_picks/draft_picks.parquet"
 PLAYERS_URL = f"{NFLVERSE}/players/players.parquet"
 
 # --- Sleeper API -------------------------------------------------------------
 SLEEPER_PLAYERS_URL = "https://api.sleeper.app/v1/players/nfl"
 SLEEPER_TRENDING_URL = "https://api.sleeper.app/v1/players/nfl/trending/{kind}"
 
+# --- ESPN fantasy (public, no auth): roster % and its 7-day change, all players
+ESPN_PLAYERS_URL = ("https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/"
+                    "{season}/segments/0/leaguedefaults/3?view=kona_player_info")
+
 
 # --- Tunable configs ---------------------------------------------------------
 @functools.lru_cache(maxsize=None)
-def weights() -> dict:
-    with open(CONFIG_DIR / "weights.yaml") as fh:
+def model_config() -> dict:
+    with open(CONFIG_DIR / "model.yaml") as fh:
         return yaml.safe_load(fh)
 
 
@@ -66,6 +74,4 @@ def manual_catalysts() -> dict:
         return {"teams": {}, "players": {}}
     with open(path) as fh:
         data = yaml.safe_load(fh) or {}
-    data.setdefault("teams", {})
-    data.setdefault("players", {})
-    return data
+    return {"teams": data.get("teams") or {}, "players": data.get("players") or {}}
