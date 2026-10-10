@@ -19,7 +19,7 @@ window.FT = (() => {
     { key: "trade", href: "trade/", label: "Trade Value Chart",
       blurb: "A week-by-week redraft trade value chart that updates after every game, with each player's trend." },
     { key: "upsets", href: "upsets/", label: "Upset Watch",
-      blurb: "Three long shots a week with the most pointing their way: rest, travel, weather and injuries. Most will lose; that's the fun." },
+      blurb: "Three long shots a week with the most pointing their way: rest, travel, weather and injuries. Most will lose, but they're worth a look." },
     { key: "survivor", href: "survivor/", label: "Survivor Helper",
       blurb: "Mark the teams you've used and get this week's survivor pick, planned so you don't burn a team you'll need later." },
   ];

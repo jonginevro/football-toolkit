@@ -1,4 +1,4 @@
-"""Learn the breakout model from history and grade it honestly.
+"""Learn the breakout model from history and grade it walk-forward.
 
 Model: L2-regularized logistic regression on a small set of interpretable
 features, pooled across positions (position enters as an intercept shift and
