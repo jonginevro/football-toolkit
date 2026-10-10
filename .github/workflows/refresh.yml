@@ -4,7 +4,7 @@ name: Refresh site data
 # - Daily (weekly in the offseason): everything, including the breakout model.
 # - Game nights in season: just the weekly tools (Vegas, weather, trade values),
 #   so they move after every game without the slow model rebuild.
-# The portfolio site (jonginevro.com) copies docs/ on its own deploy schedule.
+# The "Deploy site" workflow publishes docs/ to footballtoolkit.com once this finishes.
 on:
   schedule:
     - cron: "0 9 * 9-12,1 *"        # daily during the season (Sep–Jan)

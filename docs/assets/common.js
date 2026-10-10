@@ -4,7 +4,7 @@
 window.FT = (() => {
   // One place to rename the site.
   const BRAND = "Football Toolkit";
-  const SOURCE_URL = "https://github.com/jonginevro/breakout-board";
+  const SOURCE_URL = "https://github.com/jonginevro/football-toolkit";
 
   const script = document.currentScript;
   const ROOT = new URL("../", script.src); // docs/
