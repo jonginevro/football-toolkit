@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Breakout Board</title>
+<meta name="description" content="Ranks NFL skill players by their chance to break out over the rest of the season, with every preseason board since 2020 graded against what actually happened." />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+<header class="topbar" id="topbar" data-page="breakouts"></header>
+<script src="../assets/common.js"></script>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow" id="asof">Loading…</p>
+    <h2>Who's about to break out?</h2>
+    <p>Players most likely to jump to a startable level over the rest of the season, weighted by how cheap they are to get.</p>
+    <nav class="subnav" id="tabs" aria-label="Breakout sections">
+      <a href="#board" data-tab="board">Board</a>
+      <a href="#history" data-tab="history">History</a>
+      <a href="#method" data-tab="method">How it works</a>
+    </nav>
+  </section>
+
+  <!-- Controls. Filters only touch the board; scoring applies everywhere. -->
+  <section class="controls" aria-label="Board controls">
+    <div class="ctl-row" id="filters">
+      <span class="row-l">Filter</span>
+      <div class="ctl ctl-pos"><span class="ctl-l">Positions</span><div class="chips" id="pos-chips"></div></div>
+      <div class="ctl">
+        <label class="ctl-l" for="exp">Max experience</label>
+        <div class="range"><input type="range" id="exp" min="0" max="15" step="1" /><span class="v" id="exp-v"></span></div>
+      </div>
+      <div class="ctl">
+        <label class="ctl-l" for="tier">Value tier</label>
+        <select id="tier">
+          <option value="">Any</option>
+          <option value="start">Startable (ECR top 100)</option>
+          <option value="cheap">Cheap (ECR 100–250)</option>
+          <option value="deep">Deep (250+ or unranked)</option>
+        </select>
+      </div>
+      <div class="ctl grow-1">
+        <label class="ctl-l" for="search">Find a player</label>
+        <input id="search" type="search" placeholder="Name or team" autocomplete="off" />
+      </div>
+      <div class="ctl">
+        <label class="ctl-l" for="topn">Show top</label>
+        <select id="topn">
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="200">200</option>
+          <option value="1000">All</option>
+        </select>
+      </div>
+    </div>
+    <div class="ctl-row scoring">
+      <span class="row-l">Scoring</span>
+      <div class="ctl">
+        <label class="ctl-l" for="v-emph" title="How much a cheap price boosts the score. 0% ranks by breakout chance alone.">Value emphasis</label>
+        <div class="range"><input type="range" id="v-emph" min="0" max="1" step="0.05" /><span class="v" id="v-emph-v"></span></div>
+      </div>
+      <div class="ctl">
+        <label class="ctl-l" for="v-peak" title="The FantasyPros rank where breakouts are cheapest to buy.">Value sweet spot</label>
+        <div class="range"><input type="range" id="v-peak" min="25" max="300" step="25" /><span class="v" id="v-peak-v"></span></div>
+      </div>
+      <div class="ctl ctl-weights">
+        <span class="ctl-l">&nbsp;</span>
+        <button class="weights-toggle" id="weights-toggle" aria-expanded="false" aria-controls="weights-panel">Model weights</button>
+      </div>
+      <button class="reset-btn" id="reset" hidden>Reset to defaults</button>
+    </div>
+    <div class="weights-panel" id="weights-panel" hidden>
+      <div class="sliders" id="sliders"></div>
+    </div>
+  </section>
+
+  <!-- BOARD -->
+  <section class="panel" id="tab-board">
+    <div class="table-wrap">
+      <table class="board" id="board">
+        <thead><tr>
+          <th class="num">#</th>
+          <th>Player</th>
+          <th class="sortable" data-sort="score" title="Breakout chance weighted by value">Breakout</th>
+          <th class="num sortable" data-sort="prob" title="Chance he breaks out over the rest of the season">Chance</th>
+          <th class="num sortable hide-sm" data-sort="ecr" title="FantasyPros overall expert rank">ECR</th>
+          <th class="num sortable hide-sm" data-sort="own" title="Share of ESPN leagues rostering him">Rostered</th>
+          <th class="num sortable hide-sm" data-sort="own_chg" title="Change in ESPN roster % over the last 7 days">7d</th>
+          <th class="hide-sm">Why</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note">Click a player for the full breakdown. ECR is FantasyPros' expert consensus rank; rostered % is ESPN.</p>
+  </section>
+
+  <!-- HISTORY: preseason boards only -->
+  <section class="panel" id="tab-history" hidden>
+    <p class="lede">What the board said <b>before each season kicked off</b>, using only what was known in
+      August, and what each player actually scored over that full season.</p>
+    <div class="toolbar"><div class="chips" id="season-chips"></div></div>
+    <div class="season-summary" id="season-summary"></div>
+    <div class="cols">
+      <div>
+        <h4 id="hist-title">The preseason board</h4>
+        <div class="table-wrap">
+          <table class="board" id="hist-board">
+            <thead><tr><th class="num">#</th><th>Player</th><th class="num" title="Breakout chance weighted by value">Score</th>
+              <th class="num">Chance</th>
+              <th class="num hide-sm" title="FantasyPros overall rank that August">ECR</th>
+              <th class="num" title="Established PPR/g going into the season">Before</th>
+              <th class="num" title="PPR/g that season">That year</th><th class="num" title="That year minus before">Change</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button class="more" id="hist-more">Show more</button>
+      </div>
+      <div>
+        <h4>Biggest gains outside the top 20</h4>
+        <p class="sub">Largest PPR/g increases that season among players the board ranked below 20th.</p>
+        <ul class="missed" id="missed"></ul>
+      </div>
+    </div>
+    <h4 class="spaced">Every preseason board</h4>
+    <p class="sub">Average PPR/g change of each season's preseason top 20, next to the average for every
+      eligible player. Moves with the sliders above.</p>
+    <div class="season-bars" id="season-bars"></div>
+  </section>
+
+  <!-- METHOD -->
+  <section class="panel prose" id="tab-method" hidden>
+    <div id="method"></div>
+  </section>
+</main>
+
+<footer><p>Data: <a href="https://github.com/nflverse/nflverse-data" target="_blank" rel="noopener">nflverse</a>
+  , <a href="https://fantasy.espn.com" target="_blank" rel="noopener">ESPN</a>
+  and <a href="https://docs.sleeper.com" target="_blank" rel="noopener">Sleeper</a>. <span id="generated"></span></p></footer>
+
+<script src="app.js"></script>
+</body>
+</html>

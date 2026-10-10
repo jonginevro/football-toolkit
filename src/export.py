@@ -3,15 +3,21 @@
     python -m src.export
 
 Writes docs/data/:
-  meta.json            model description, learned weights, season/week, metrics
-  board.json           the live board for the current season as of this week
-  history/<year>.json  each past season's boards (walk-forward scored) + outcomes
+  meta.json            breakout model description, learned weights, season/week
+  board.json           the live breakout board for the current season as of this week
+  history/<year>.json  each past season's preseason board (walk-forward scored) + results
+  vegas.json           this week's lines, implied team totals, Vegas-adjusted PPR
+  weather.json         game-time forecasts for this week's slate and what they mean
+  trade.json           week-by-week trade values for the current season
+  upsets.json          this week's long shots, their upset scores and the method's track record
+  survivor.json        every team's win chance for each remaining game, for survivor planning
 """
 from __future__ import annotations
 
 import datetime as dt
 import json
 import math
+import traceback
 
 import numpy as np
 import pandas as pd
@@ -20,6 +26,7 @@ from . import config
 from .data import depth, espn, market, sleeper
 from .model import snapshot as snap
 from .model import train
+from .tools import schedule, survivor, trade, upsets, vegas, weather
 
 GROUP_INFO = {
     "talent": ("Talent", "Draft capital, points per touch, and last year's production."),
@@ -213,7 +220,13 @@ def _summary(r: pd.DataFrame) -> dict:
 def main():
     season = config.CURRENT_SEASON
     last = snap.last_stats_week(season)
-    week = min(last + 1, 18)
+    # the week still being played, from the schedule: a final Thursday game
+    # doesn't make it next week yet
+    try:
+        week = schedule.current_week(season)
+    except Exception:
+        week = min(last + 1, 18)
+    last = min(last, week - 1)
     weeks = sorted(set(config.model_config()["snapshot_weeks"]) | {week})
 
     hist = train.history(weeks)
@@ -281,10 +294,34 @@ def main():
     }
     _write(config.SITE_DATA_DIR / "meta.json", meta)
 
+    tools(season, week)
+
     pooled = rep.groupby("week")[["auc", "auc_draft", "auc_prior", "hits@20", "base@20"]].mean()
     print(pooled.round(3).to_string())
     print(f"board: {season} week {week} ({len(live)} players)")
 
 
+def tools(season: int, week: int):
+    """The weekly tools. Each is independent: one failing source (say, the
+    weather API being down) leaves the others and its last good file in place."""
+    for name, build in (("vegas", lambda: vegas.build(season, week)),
+                        ("weather", lambda: weather.build(season, week)),
+                        ("trade", lambda: trade.build(season, week)),
+                        ("upsets", lambda: upsets.build(season, week)),
+                        ("survivor", lambda: survivor.build(season, week))):
+        try:
+            out = build()
+            out["generated"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
+            _write(config.SITE_DATA_DIR / f"{name}.json", out)
+            print(f"{name}: ok")
+        except Exception:
+            print(f"{name}: FAILED, keeping the previous file")
+            traceback.print_exc()
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if "--tools-only" in sys.argv:  # skip the slow model rebuild
+        tools(config.CURRENT_SEASON, schedule.current_week(config.CURRENT_SEASON))
+    else:
+        main()

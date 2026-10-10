@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vegas Rankings</title>
+<meta name="description" content="This week's NFL lines turned into implied team totals, and every player's PPR per game scaled by how many points Vegas expects his team to score." />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+<header class="topbar" id="topbar" data-page="vegas"></header>
+<script src="../assets/common.js"></script>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow" id="asof">Loading…</p>
+    <h2>Who Vegas likes this week</h2>
+    <p>Each game's spread and total turned into how many points each team is expected to score, then every
+      player's PPR per game scaled by how that compares with what his team usually puts up.</p>
+  </section>
+
+  <h3 class="section-h">Games</h3>
+  <div class="games" id="games"></div>
+
+  <section class="controls" aria-label="Player filters">
+    <div class="ctl-row">
+      <div class="ctl ctl-pos"><span class="ctl-l">Positions</span><div class="chips" id="pos-chips"></div></div>
+      <div class="ctl">
+        <label class="ctl-l" for="sort">Sort by</label>
+        <select id="sort">
+          <option value="vegas">Vegas PPR</option>
+          <option value="mult">Boost vs usual</option>
+          <option value="implied">Team implied total</option>
+        </select>
+      </div>
+      <div class="ctl grow-1">
+        <label class="ctl-l" for="search">Find a player or team</label>
+        <input id="search" type="search" placeholder="Name or team" autocomplete="off" />
+      </div>
+      <div class="ctl">
+        <label class="ctl-l" for="topn">Show top</label>
+        <select id="topn">
+          <option value="25">25</option>
+          <option value="50" selected>50</option>
+          <option value="100">100</option>
+          <option value="1000">All</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="table-wrap">
+      <table class="board" id="players">
+        <thead><tr>
+          <th class="num">#</th>
+          <th>Player</th>
+          <th>Matchup</th>
+          <th class="num" title="Points Vegas expects his team to score">Team total</th>
+          <th class="num hide-sm" title="His team's average points so far, blended with the league average">Usual</th>
+          <th class="num" title="Team total divided by usual points">Boost</th>
+          <th class="num hide-sm" title="PPR per game, this season blended with last">PPR/g</th>
+          <th title="PPR/g × boost">Vegas PPR</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" id="vegas-note"></p>
+  </section>
+</main>
+
+<footer><p>Lines: <a href="https://github.com/nflverse/nfldata" target="_blank" rel="noopener">nflverse nfldata</a> ·
+  Stats: <a href="https://github.com/nflverse/nflverse-data" target="_blank" rel="noopener">nflverse</a> ·
+  Injuries: <a href="https://docs.sleeper.com" target="_blank" rel="noopener">Sleeper</a>. <span id="generated"></span></p></footer>
+
+<script src="vegas.js"></script>
+</body>
+</html>

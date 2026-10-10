@@ -1,0 +1,42 @@
+# Where each game is played, for the weather forecast. Matched on the stadium
+# name in the nflverse schedule first (its stadium_id is sometimes the home
+# team's, even for an international game), then on stadium_id.
+# roof: open | retractable | dome
+- {id: ATL97, names: [Mercedes-Benz Stadium], lat: 33.7554, lon: -84.4008, roof: retractable}
+- {id: BAL00, names: [M&T Bank Stadium], lat: 39.2780, lon: -76.6227, roof: open}
+- {id: BOS00, names: [Gillette Stadium], lat: 42.0909, lon: -71.2643, roof: open}
+- {id: BUF00, names: [Highmark Stadium, New Era Field], lat: 42.7738, lon: -78.7870, roof: open}
+- {id: CAR00, names: [Bank of America Stadium], lat: 35.2258, lon: -80.8528, roof: open}
+- {id: CHI98, names: [Soldier Field], lat: 41.8623, lon: -87.6167, roof: open}
+- {id: CIN00, names: [Paycor Stadium], lat: 39.0955, lon: -84.5161, roof: open}
+- {id: CLE00, names: [Huntington Bank Field, FirstEnergy Stadium], lat: 41.5061, lon: -81.6995, roof: open}
+- {id: DAL00, names: [AT&T Stadium], lat: 32.7473, lon: -97.0945, roof: retractable}
+- {id: DEN00, names: [Empower Field at Mile High], lat: 39.7439, lon: -105.0201, roof: open}
+- {id: DET00, names: [Ford Field], lat: 42.3400, lon: -83.0456, roof: dome}
+- {id: GNB00, names: [Lambeau Field], lat: 44.5013, lon: -88.0622, roof: open}
+- {id: HOU00, names: [NRG Stadium, Reliant Stadium], lat: 29.6847, lon: -95.4107, roof: retractable}
+- {id: IND00, names: [Lucas Oil Stadium], lat: 39.7601, lon: -86.1639, roof: retractable}
+- {id: JAX00, names: [EverBank Stadium, TIAA Bank Stadium], lat: 30.3239, lon: -81.6373, roof: open}
+- {id: KAN00, names: [GEHA Field at Arrowhead Stadium, Arrowhead Stadium], lat: 39.0489, lon: -94.4839, roof: open}
+- {id: LAX01, names: [SoFi Stadium], lat: 33.9535, lon: -118.3392, roof: dome}
+- {id: LON00, names: [Wembley Stadium], lat: 51.5560, lon: -0.2796, roof: open}
+- {id: LON02, names: [Tottenham Hotspur Stadium], lat: 51.6043, lon: -0.0664, roof: open}
+- {id: MAD01, names: [Bernabeu, Santiago Bernabeu], lat: 40.4531, lon: -3.6883, roof: retractable}
+- {id: MEL00, names: [Melbourne Cricket Ground], lat: -37.8200, lon: 144.9834, roof: open}
+- {id: MEX00, names: [Estadio Banorte, Estadio Azteca], lat: 19.3029, lon: -99.1505, roof: open}
+- {id: MIA00, names: [Hard Rock Stadium], lat: 25.9580, lon: -80.2389, roof: open}
+- {id: MIN01, names: [U.S. Bank Stadium], lat: 44.9737, lon: -93.2581, roof: dome}
+- {id: MUN01, names: [FC Bayern Munich Stadium, Allianz Arena], lat: 48.2188, lon: 11.6247, roof: open}
+- {id: NAS00, names: [Nissan Stadium], lat: 36.1665, lon: -86.7713, roof: open}
+- {id: NOR00, names: [Caesars Superdome, Mercedes-Benz Superdome], lat: 29.9511, lon: -90.0812, roof: dome}
+- {id: NYC01, names: [MetLife Stadium], lat: 40.8135, lon: -74.0745, roof: open}
+- {id: PAR00, names: [Stade de France], lat: 48.9245, lon: 2.3602, roof: open}
+- {id: PHI00, names: [Lincoln Financial Field], lat: 39.9008, lon: -75.1675, roof: open}
+- {id: PHO00, names: [State Farm Stadium], lat: 33.5276, lon: -112.2626, roof: retractable}
+- {id: PIT00, names: [Acrisure Stadium], lat: 40.4468, lon: -80.0158, roof: open}
+- {id: RIO00, names: [Maracana Stadium], lat: -22.9122, lon: -43.2302, roof: open}
+- {id: SEA00, names: [Lumen Field], lat: 47.5952, lon: -122.3316, roof: open}
+- {id: SFO01, names: [Levi's Stadium], lat: 37.4030, lon: -121.9700, roof: open}
+- {id: TAM00, names: [Raymond James Stadium], lat: 27.9759, lon: -82.5033, roof: open}
+- {id: VEG00, names: [Allegiant Stadium], lat: 36.0909, lon: -115.1833, roof: dome}
+- {id: WAS00, names: [Northwest Stadium, FedExField], lat: 38.9078, lon: -76.8645, roof: open}

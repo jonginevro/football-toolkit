@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Survivor Helper</title>
+<meta name="description" content="Survivor pool helper: mark the teams you've used and get this week's pick, planned so you don't burn a team you'll need later." />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+<header class="topbar" id="topbar" data-page="survivor"></header>
+<script src="../assets/common.js"></script>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow" id="asof">Loading…</p>
+    <h2>Survivor Helper</h2>
+    <p>Mark the teams you've already used. The pick is the team that gives you the best chance of surviving the next few
+      weeks, not just this one, so you don't spend a team you'll need later.</p>
+  </section>
+
+  <section class="controls" aria-label="Survivor setup">
+    <div class="ctl-row">
+      <span class="row-l">Used</span>
+      <div class="ctl grow-1">
+        <span class="ctl-l">Teams you've already picked <button class="link-btn" id="clear-used" hidden>Clear</button></span>
+        <div class="team-grid" id="team-grid"></div>
+      </div>
+    </div>
+    <div class="ctl-row scoring">
+      <span class="row-l">Rules</span>
+      <div class="ctl ctl-pos">
+        <span class="ctl-l">Skip</span>
+        <div class="chips" id="skip-chips"></div>
+      </div>
+      <div class="ctl">
+        <label class="ctl-l" for="horizon">Plan ahead</label>
+        <select id="horizon">
+          <option value="1">This week only</option>
+          <option value="3">3 weeks</option>
+          <option value="5" selected>5 weeks</option>
+          <option value="8">8 weeks</option>
+          <option value="99">Rest of season</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <div class="sv-rec" id="rec"></div>
+
+  <section class="panel spaced-top">
+    <h4>Every option this week</h4>
+    <p class="sub">Ranked by your chance to survive the whole plan if you take that team now.</p>
+    <div class="table-wrap">
+      <table class="board" id="options">
+        <thead><tr>
+          <th>Team</th>
+          <th class="num" title="Chance to win this week">This week</th>
+          <th title="Chance to survive every week of the plan, taking this team now">Plan survival</th>
+          <th class="num hide-sm" title="This team's best remaining spot after this week">Best later spot</th>
+          <th class="hide-sm">Notes</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel prose spaced-top">
+    <h3>How it works</h3>
+    <div id="method"></div>
+  </section>
+</main>
+
+<footer><p>Lines: <a href="https://github.com/nflverse/nfldata" target="_blank" rel="noopener">nflverse nfldata</a>. <span id="generated"></span></p></footer>
+
+<script src="survivor.js"></script>
+</body>
+</html>

@@ -1,12 +1,23 @@
-name: Refresh board data
+name: Refresh site data
 
-# Rebuilds docs/data from the latest nflverse + Sleeper data and commits it.
+# Rebuilds docs/data and commits it.
+# - Daily (weekly in the offseason): everything, including the breakout model.
+# - Game nights in season: just the weekly tools (Vegas, weather, trade values),
+#   so they move after every game without the slow model rebuild.
 # The portfolio site (jonginevro.com) copies docs/ on its own deploy schedule.
 on:
   schedule:
-    - cron: "0 9 * 9-12,1 *"   # daily during the season (Sep–Jan)
-    - cron: "0 9 * 2-8 1"      # weekly in the offseason
+    - cron: "0 9 * 9-12,1 *"        # daily during the season (Sep–Jan)
+    - cron: "0 9 * 2-8 1"           # weekly in the offseason
+    - cron: "30 21 * 9-12,1 0"      # Sun ~5:30pm ET, after the early games
+    - cron: "30 1 * 9-12,1 1"       # Sun ~9:30pm ET, after the late games
+    - cron: "30 4 * 9-12,1 1,2,5"   # after Sunday, Monday and Thursday night games
   workflow_dispatch:
+    inputs:
+      tools_only:
+        description: "Only rebuild the weekly tools (skip the breakout model)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -30,7 +41,16 @@ jobs:
           restore-keys: nflverse-
 
       - run: pip install -r requirements.txt
-      - run: python -m src.export
+
+      - name: Build
+        run: |
+          if [ "${{ inputs.tools_only }}" = "true" ] || \
+             { [ "${{ github.event_name }}" = "schedule" ] && [ "${{ github.event.schedule }}" != "0 9 * 9-12,1 *" ] \
+               && [ "${{ github.event.schedule }}" != "0 9 * 2-8 1" ]; }; then
+            python -m src.export --tools-only
+          else
+            python -m src.export
+          fi
 
       - name: Commit if changed
         run: |
@@ -40,6 +60,7 @@ jobs:
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-            git commit -m "data: refresh board"
+            git commit -m "data: refresh"
+            git pull --rebase
             git push
           fi

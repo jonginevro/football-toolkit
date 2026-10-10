@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Trade Value Chart</title>
+<meta name="description" content="A week-by-week redraft fantasy football trade value chart (12-team, 1QB, PPR) that updates after every game." />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+<header class="topbar" id="topbar" data-page="trade"></header>
+<script src="../assets/common.js"></script>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow" id="asof">Loading…</p>
+    <h2>Trade Value Chart</h2>
+    <p>Redraft values for 12-team, 1QB PPR leagues. Add up each side of a trade and compare. Values blend the expert
+      market with what each player is actually producing, and move after every game.</p>
+  </section>
+
+  <section class="controls" aria-label="Chart controls">
+    <div class="ctl-row">
+      <div class="ctl"><span class="ctl-l">Week</span><div class="chips" id="week-chips"></div></div>
+      <div class="ctl grow-1">
+        <label class="ctl-l" for="search">Find a player</label>
+        <input id="search" type="search" placeholder="Name or team" autocomplete="off" />
+      </div>
+      <div class="ctl tiers-ctl"><span class="ctl-l">Tiers</span><div class="tier-legend" id="tier-legend"></div></div>
+    </div>
+  </section>
+
+  <div class="trade-layout">
+    <section class="panel trade-panel">
+      <div class="table-wrap">
+        <table class="trade" id="trade">
+          <colgroup><col class="c-val"><col><col class="c-tr"><col><col class="c-tr"><col><col class="c-tr"><col><col class="c-tr"></colgroup>
+          <thead>
+            <tr class="grp"><th></th><th colspan="2">Running back</th><th colspan="2">Wide receiver</th>
+              <th colspan="2">Tight end</th><th colspan="2">Quarterback</th></tr>
+            <tr><th class="num">Value</th>
+              <th>Name</th><th class="num">Trend</th><th>Name</th><th class="num">Trend</th>
+              <th>Name</th><th class="num">Trend</th><th>Name</th><th class="num">Trend</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+    <aside class="panel movers">
+      <h4>Biggest risers</h4>
+      <ul class="missed" id="risers"></ul>
+      <h4 class="spaced">Biggest fallers</h4>
+      <ul class="missed" id="fallers"></ul>
+    </aside>
+  </div>
+
+  <section class="panel prose spaced-top">
+    <h3>How the values are built</h3>
+    <div id="trade-method"></div>
+  </section>
+</main>
+
+<footer><p>Rankings: FantasyPros ECR via <a href="https://github.com/dynastyprocess/data" target="_blank" rel="noopener">DynastyProcess</a> ·
+  Stats: <a href="https://github.com/nflverse/nflverse-data" target="_blank" rel="noopener">nflverse</a>. <span id="generated"></span></p></footer>
+
+<script src="trade.js"></script>
+</body>
+</html>

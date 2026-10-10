@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Weather Report</title>
+<meta name="description" content="Game-time weather for every NFL game this week and what wind, rain, snow or cold usually means for fantasy scoring." />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+<header class="topbar" id="topbar" data-page="weather"></header>
+<script src="../assets/common.js"></script>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow" id="asof">Loading…</p>
+    <h2>Game-day weather</h2>
+    <p>The forecast for kickoff through the next few hours at every stadium, and what those conditions usually do
+      to kickers, passing games and the run.</p>
+  </section>
+
+  <div class="wx-summary" id="wx-summary"></div>
+  <div class="wx-grid" id="wx-games"></div>
+  <div class="wx-quiet" id="wx-quiet"></div>
+
+  <section class="panel prose wx-guide">
+    <h3>What the conditions usually mean</h3>
+    <table>
+      <tr><th>Condition</th><th>Usual effect</th></tr>
+      <tr><td>Wind 15+ mph or gusts 28+</td><td>Long field goals and deep passes suffer first. At 20+ mph teams tend to run more and totals drop.</td></tr>
+      <tr><td>Rain</td><td>A wet ball means more drops and fumbles. Passing volume and efficiency dip a little; heavy rain matters more.</td></tr>
+      <tr><td>Snow</td><td>Footing and visibility drop. Scoring usually falls and kickers struggle.</td></tr>
+      <tr><td>Cold (32°F and below)</td><td>Kicks travel shorter; in bitter cold the ball is harder to throw and catch.</td></tr>
+      <tr><td>Dome or closed roof</td><td>No effect.</td></tr>
+    </table>
+    <p class="muted">Forecasts reach about 16 days out and get more reliable closer to kickoff. They refresh every day.</p>
+  </section>
+</main>
+
+<footer><p>Forecasts: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> ·
+  Schedule: <a href="https://github.com/nflverse/nfldata" target="_blank" rel="noopener">nflverse nfldata</a>. <span id="generated"></span></p></footer>
+
+<script src="weather.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-/* Fantasy Breakout Board — static front end.
+/* Breakouts page — static front end.
  *
  * Every player's log-odds arrive pre-split into factor groups:
  *   logit = base + talent + role + profile + ceiling (+ notes on the live board)
@@ -68,14 +68,10 @@
   }
 
   // ------------------------------------------------------------------ load
-  async function getJSON(path) {
-    const res = await fetch(path, { cache: "no-cache" });
-    if (!res.ok) throw new Error(`${path}: ${res.status}`);
-    return res.json();
-  }
+  const getJSON = FT.getJSON;
 
   async function init() {
-    const [meta, board] = await Promise.all([getJSON("data/meta.json"), getJSON("data/board.json")]);
+    const [meta, board] = await Promise.all([getJSON("meta.json"), getJSON("board.json")]);
     S.meta = meta;
     S.val = { floor: meta.value.floor, peak: meta.value.peak_rank, sigma: meta.value.sigma, unranked: meta.value.unranked };
     try {
@@ -107,7 +103,7 @@
 
     // every preseason board is needed for the History page and the walkthrough
     const loaded = await Promise.all(meta.history_seasons.map((s) =>
-      getJSON(`data/history/${s}.json`).catch(() => null)));
+      getJSON(`history/${s}.json`).catch(() => null)));
     for (const h of loaded) {
       if (!h) continue;
       S.hist[h.season] = rows(h);
@@ -244,8 +240,7 @@
   function playerCell(r, withImg = true) {
     const img = withImg && r.headshot
       ? `<img loading="lazy" src="${esc(r.headshot)}" alt="" onerror="this.style.visibility='hidden'">` : "";
-    const injTag = r.injury && (r.injury === "Questionable" ? "Q" : r.injury === "Doubtful" ? "D" : "O");
-    const inj = injTag ? `<span class="inj ${injTag}" title="${esc(r.injury)}">${injTag}</span>` : "";
+    const inj = FT.injTag(r.injury);
     const age = r.age ? ` · ${fmt(r.age)}y` : "";
     const yr = r.exp === 0 ? " · rookie" : ` · yr ${r.exp + 1}`;
     return `<div class="player">${img}<div><div class="nm">${esc(r.name)}${inj}</div>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Upset Watch</title>
+<meta name="description" content="Three NFL long shots a week with the most situational signals pointing their way, plus an honest track record of the method." />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+<header class="topbar" id="topbar" data-page="upsets"></header>
+<script src="../assets/common.js"></script>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow" id="asof">Loading…</p>
+    <h2>Upset Watch</h2>
+    <p>Three long shots a week with the most pointing their way: rest, travel, weather, blowouts and injuries, each
+      weighted by how underdogs in that spot have actually done. Most of these will lose. They're long shots.</p>
+  </section>
+
+  <div class="upset-picks" id="picks"></div>
+  <div class="track" id="track"></div>
+
+  <section class="panel spaced-top">
+    <h4>Every underdog this week</h4>
+    <p class="sub" id="games-sub"></p>
+    <div class="table-wrap">
+      <table class="board" id="games">
+        <thead><tr>
+          <th>Underdog</th>
+          <th class="num">Odds</th>
+          <th class="num" title="Chance to win outright, from the moneylines with the bookmaker's cut removed">Vegas</th>
+          <th class="num" title="Sum of the situational spots and injury news below, in points of win chance">Upset score</th>
+          <th class="hide-sm">Biggest factor</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <details class="panel spaced-top method-box">
+    <summary>How the score works</summary>
+    <div class="prose" id="method"></div>
+    <div class="table-wrap">
+      <table class="board" id="record">
+        <thead><tr>
+          <th>Spot</th>
+          <th class="num">Games</th>
+          <th class="num">Underdogs won</th>
+          <th class="num">Vegas expected</th>
+          <th class="num" title="Points of win chance this spot adds to the upset score">Weight</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" id="eval-note"></p>
+  </details>
+</main>
+
+<footer><p>Lines and results: <a href="https://github.com/nflverse/nfldata" target="_blank" rel="noopener">nflverse nfldata</a> ·
+  Forecasts: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> ·
+  Injuries: <a href="https://docs.sleeper.com" target="_blank" rel="noopener">Sleeper</a>. <span id="generated"></span></p></footer>
+
+<script src="upsets.js"></script>
+</body>
+</html>
