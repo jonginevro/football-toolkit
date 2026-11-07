@@ -173,7 +173,9 @@ def manual_notes(df: pd.DataFrame) -> pd.Series:
 #  Serialization                                                               #
 # --------------------------------------------------------------------------- #
 def _clean(v):
-    if v is None or (isinstance(v, float) and (math.isnan(v) or math.isinf(v))):
+    # pd.NA and not just nan: pandas 3.1 made .map() over a "string" column
+    # return Arrow-backed numbers, whose missing value is pd.NA
+    if v is None or v is pd.NA or (isinstance(v, float) and (math.isnan(v) or math.isinf(v))):
         return None
     if isinstance(v, (np.floating,)):
         return None if np.isnan(v) else round(float(v), 3)
